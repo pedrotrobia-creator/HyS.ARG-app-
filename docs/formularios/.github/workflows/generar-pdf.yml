@@ -1,0 +1,27 @@
+name: Generar PDF del Formulario
+
+on:
+  push:
+    paths:
+      - 'formularios/formulario-completo.md'
+  workflow_dispatch:
+
+jobs:
+  to-pdf:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Obtener archivos
+        uses: actions/checkout@v4
+
+      - name: 📄 Convertir Markdown a PDF
+        uses: LeeChenin/md-to-pdf@master
+        with:
+          md_file_path: 'formularios/formulario-completo.md'
+          pdf_file_path: 'formularios/formulario-completo.pdf'
+
+      - name: 📤 Subir PDF generado
+        uses: actions/upload-artifact@v4
+        with:
+          name: formulario-pdf
+          path: formularios/formulario-completo.pdf
+          retention-days: 30
