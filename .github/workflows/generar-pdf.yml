@@ -15,11 +15,19 @@ jobs:
       - name: 📥 Obtener archivos
         uses: actions/checkout@v4
 
+      - name: 📦 Instalar Pandoc
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc texlive-latex-base texlive-fonts-recommended texlive-latex-extra
+
       - name: 📄 Convertir Markdown a PDF
-        uses: LeeChenin/md-to-pdf@master
-        with:
-          md_file_path: 'formularios/formulario-completo.md'
-          pdf_file_path: 'formularios/formulario-completo.pdf'
+        run: |
+          pandoc formularios/formulario-completo.md \
+            -o formularios/formulario-completo.pdf \
+            --pdf-engine=xelatex \
+            -V geometry:margin=2cm \
+            -V mainfont="DejaVu Sans" \
+            -V fontsize=11pt
 
       - name: 📤 Subir PDF generado
         uses: actions/upload-artifact@v4
