@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: 📄 Convertir con WeasyPrint
-        uses: StefanSchoof/md-weasyprint@v1
+        uses: stefanschoof/md-weasyprint@...
         with:
           input: 'formularios/formulario-completo.md'
           output: 'formularios/formulario-completo.pdf'
