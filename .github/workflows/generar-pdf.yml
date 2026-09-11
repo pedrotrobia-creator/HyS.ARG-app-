@@ -3,7 +3,7 @@ name: Generar PDF del Formulario
 on:
   push:
     paths:
-      - 'formularios/formulario-completo.md'
+      - 'README.md'
   workflow_dispatch:
 
 jobs:
@@ -16,38 +16,20 @@ jobs:
       - name: 📥 Obtener archivos
         uses: actions/checkout@v4
 
-      - name: 🔍 Verificar archivos y rutas
-        run: |
-          echo "=== Archivos en carpeta actual ==="
-          ls -la
-          echo "=== Archivos en carpeta formularios ==="
-          ls -la formularios/ || echo "⚠️ La carpeta formularios NO existe"
-
-      - name: Instalar WeasyPrint y TODAS las dependencias
+      - name: 📦 Instalar Pandoc y WeasyPrint
         run: |
           sudo apt-get update
-          sudo apt-get install -y weasyprint libpango-1.0-0 libpangocairo-1.0-0 libcairo2 libgdk-pixbuf2.0-0 libffi-dev
-          pip install --upgrade pip
-          pip install weasyprint markdown
+          sudo apt-get install -y pandoc weasyprint
 
-      - name: 📄 Convertir Markdown a PDF
+      - name: 📄 Convertir README.md a PDF
         run: |
-          ARCHIVO_ENTRADA="formularios/formulario-completo.md"
-          ARCHIVO_SALIDA="formularios/formulario-completo.pdf"
-          
-          if [ ! -f "$ARCHIVO_ENTRADA" ]; then
-              echo "❌ ERROR: No se encontró el archivo $ARCHIVO_ENTRADA"
-              exit 1
-          fi
-          
-          echo "✅ Archivo encontrado, generando PDF..."
-          weasyprint "$ARCHIVO_ENTRADA" "$ARCHIVO_SALIDA"
+          pandoc README.md -o README.pdf --pdf-engine=weasyprint
           echo "✅ PDF generado correctamente"
-          ls -la "$ARCHIVO_SALIDA"
+          ls -la README.pdf
 
       - name: 📤 Subir PDF generado
         uses: actions/upload-artifact@v4
         with:
           name: formulario-pdf
-          path: formularios/formulario-completo.pdf
+          path: README.pdf
           retention-days: 30
