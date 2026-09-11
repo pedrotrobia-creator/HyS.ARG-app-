@@ -13,19 +13,28 @@ jobs:
       contents: write
 
     steps:
-      - name: 📥 Obtener archivos
+      - name: 📥 Descargar archivos del repositorio
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🔍 Verificar que README.md existe
+        run: |
+          ls -la
+          if [ -f "README.md" ]; then
+            echo "✅ ¡ENCONTRADO! Listo para convertir"
+          else
+            echo "❌ NO se encontró README.md"
+            exit 1
+          fi
 
       - name: 📦 Instalar Pandoc y WeasyPrint
         run: |
           sudo apt-get update
           sudo apt-get install -y pandoc weasyprint
 
-      - name: 📄 Convertir README.md a PDF
-        run: |
-          pandoc README.md -o README.pdf --pdf-engine=weasyprint
-          echo "✅ PDF generado correctamente"
-          ls -la README.pdf
+      - name: 📄 Convertir a PDF
+        run: pandoc README.md -o README.pdf --pdf-engine=weasyprint
 
       - name: 📤 Subir PDF generado
         uses: actions/upload-artifact@v4
