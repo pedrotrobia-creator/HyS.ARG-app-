@@ -11,24 +11,19 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+
     steps:
       - name: 📥 Obtener archivos
         uses: actions/checkout@v4
 
-      - name: 📄 Convertir con WeasyPrint
-              - name: Instalar WeasyPrint y dependencias
+      - name: Instalar WeasyPrint y dependencias
         run: |
           sudo apt-get update
           sudo apt-get install -y weasyprint
           pip install markdown
 
-      - name: Convertir Markdown a PDF
-        run: |
-          # Reemplaza "tu-archivo.md" por el nombre real de tu archivo
-          weasyprint tu-archivo.md salida.pdf
-        with:
-          input: 'formularios/formulario-completo.md'
-          output: 'formularios/formulario-completo.pdf'
+      - name: 📄 Convertir Markdown a PDF
+        run: weasyprint formularios/formulario-completo.md formularios/formulario-completo.pdf
 
       - name: 📤 Subir PDF generado
         uses: actions/upload-artifact@v4
