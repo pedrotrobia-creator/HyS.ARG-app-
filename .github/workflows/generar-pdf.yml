@@ -3,7 +3,7 @@ name: Generar PDF del Formulario
 on:
   push:
     paths:
-      - 'README.md'
+      - 'readme.md'
   workflow_dispatch:
 
 jobs:
@@ -15,18 +15,6 @@ jobs:
     steps:
       - name: 📥 Descargar archivos del repositorio
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: 🔍 Verificar que README.md existe
-        run: |
-          ls -la
-          if [ -f "README.md" ]; then
-            echo "✅ ¡ENCONTRADO! Listo para convertir"
-          else
-            echo "❌ NO se encontró README.md"
-            exit 1
-          fi
 
       - name: 📦 Instalar Pandoc y WeasyPrint
         run: |
@@ -34,11 +22,11 @@ jobs:
           sudo apt-get install -y pandoc weasyprint
 
       - name: 📄 Convertir a PDF
-        run: pandoc README.md -o README.pdf --pdf-engine=weasyprint
+        run: pandoc readme.md -o readme.pdf --pdf-engine=weasyprint
 
       - name: 📤 Subir PDF generado
         uses: actions/upload-artifact@v4
         with:
           name: formulario-pdf
-          path: README.pdf
+          path: readme.pdf
           retention-days: 30
